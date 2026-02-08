@@ -7,7 +7,7 @@ const continueBtn = document.getElementById('continueBtn');
 let currentGif = 0;
 let typingSpeed = 55;
 let typingDone = false;
-let sceneFinished = false; // 🆕 safety lock
+let sceneFinished = false;
 
 /* ---------- TYPING ---------- */
 
@@ -72,12 +72,10 @@ document.addEventListener('touchstart', e => {
 document.addEventListener('touchend', e => {
   let endX = e.changedTouches[0].clientX;
 
-  // Swipe RIGHT → back to letter
   if (endX - startX > 80 && overlay.style.display === 'flex') {
     overlay.style.display = 'none';
   }
 
-  // Swipe LEFT on letter → start GIF again
   if (startX - endX > 80 && overlay.style.display !== 'flex' && typingDone) {
     startGifFlow();
   }
@@ -91,16 +89,16 @@ letter.addEventListener('click', () => {
   }
 });
 
-/* ---------- CONTINUE (SCENE DONE) ---------- */
+/* ---------- CONTINUE → SCENE DONE ---------- */
 
 continueBtn.addEventListener('click', () => {
   if (sceneFinished) return;
   sceneFinished = true;
 
-  /* 🔔 scene completed → move next after 5 sec */
-  if (window.SCENE_DONE) {
-    setTimeout(() => {
-      window.SCENE_DONE(4); // 👈 scene number yahin change hota hai
-    }, 5000);
-  }
+  setTimeout(() => {
+    window.parent.postMessage(
+      { type: "SCENE_DONE" },
+      "*"
+    );
+  }, 5000);
 });
