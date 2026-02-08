@@ -82,9 +82,10 @@ function finishScene() {
   if (sceneFinished) return;
   sceneFinished = true;
 
-  if (window.SCENE_DONE) {
-    setTimeout(() => {
-      window.SCENE_DONE(5); // 👈 cake scene number (change if needed)
-    }, 3000);
-  }
+  setTimeout(() => {
+    window.parent.postMessage(
+      { type: "SCENE_DONE" },
+      "*"
+    );
+  }, 3000);
 }
