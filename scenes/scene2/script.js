@@ -4,7 +4,7 @@ const sound = document.getElementById('pageSound');
 
 let current = 0;
 let soundUnlocked = false;
-let sceneFinished = false; // prevent multiple SCENE_DONE triggers
+let sceneFinished = false; // Prevent multiple SCENE_DONE triggers
 
 /* ---------- SOUND FIX ---------- */
 function playSound() {
@@ -15,22 +15,20 @@ function playSound() {
 
 /* ---------- SHOW PAGE ---------- */
 function showPage(index) {
-
   // Invalid index
   if (index < 0) return;
 
-  // LAST PAGE KE BAAD → DIARY CLOSE
+  // LAST PAGE → DIARY CLOSE
   if (index >= pages.length) {
 
     // prevent multiple triggers
     if (sceneFinished) return;
     sceneFinished = true;
 
-    // closing animation
+    // Closing animation
     diary.classList.add('close');
 
-    // 🔔 SCENE_DONE AFTER CLOSING ANIMATION
-    // Adjust timeout according to your closing animation duration
+    // 🔔 Send SCENE_DONE AFTER closing animation (adjust duration to match CSS)
     setTimeout(() => {
       window.parent.postMessage({ type: "SCENE_DONE" }, "*");
     }, 3000); // 3 sec after diary close, adjust if animation longer
@@ -41,9 +39,13 @@ function showPage(index) {
   // Normal page turn
   playSound();
 
+  // Remove active from previous page
   pages[current].classList.remove('active');
+
+  // Add active to new page
   pages[index].classList.add('active');
 
+  // Page flip animation
   const pageContent = pages[index].querySelector('.page');
   if (pageContent) {
     pageContent.animate(
@@ -61,10 +63,9 @@ function showPage(index) {
   current = index;
 }
 
-/* ---------- NEXT / PREV ---------- */
+/* ---------- NEXT / PREV PAGE ---------- */
 function nextPage() {
-  // Prevent advancing if scene already finished
-  if (sceneFinished) return;
+  if (sceneFinished) return; // Prevent advancing after scene finished
   showPage(current + 1);
 }
 
@@ -99,7 +100,7 @@ document.addEventListener('touchend', e => {
 
   const diff = startX - endX;
 
-  if (sceneFinished) return; // prevent page turn after scene finished
+  if (sceneFinished) return; // Prevent page turn after scene finished
 
   if (diff > 60) {
     nextPage();
