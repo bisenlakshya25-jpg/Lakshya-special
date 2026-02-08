@@ -1,0 +1,82 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+  background: radial-gradient(circle at top, #2a2a2a, #0f0f0f);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Playfair Display', serif;
+  overflow: hidden;
+}
+
+.scene6 {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+/* Letter */
+.letter {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: #f2f2f2;
+  padding: 20px;
+}
+
+h1 {
+  font-family: 'Great Vibes', cursive;
+  font-size: 3.2rem;
+  margin-bottom: 30px;
+  opacity: 0;
+  text-shadow: 0 0 15px rgba(255,255,255,0.4);
+}
+
+p {
+  font-size: 1.25rem;
+  line-height: 1.9;
+  opacity: 0;
+}
+
+/* Heart Scene */
+#heartScene {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  opacity: 0;
+  pointer-events: none;
+}
+
+#heart {
+  font-size: 80px;
+  animation: blink 2s infinite;
+  transition: transform 6s ease, opacity 3s ease;
+}
+
+#endText {
+  margin-top: 40px;
+  font-size: 1.3rem;
+  color: #fff;
+  text-align: center;
+  opacity: 0;
+  text-shadow: 0 0 20px rgba(255,255,255,0.6);
+  transition: opacity 3s ease;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
