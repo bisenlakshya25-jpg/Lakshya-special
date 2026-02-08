@@ -4,7 +4,7 @@ const sound = document.getElementById('pageSound');
 
 let current = 0;
 let soundUnlocked = false;
-let sceneFinished = false; // 🆕 prevent multiple triggers
+let sceneFinished = false; // prevent multiple triggers
 
 /* ---------- SOUND FIX ---------- */
 function playSound() {
@@ -22,10 +22,13 @@ function showPage(index) {
     diary.classList.add('close');
 
     /* 🔔 SCENE DONE (only once) */
-    if (!sceneFinished && window.SCENE_DONE) {
+    if (!sceneFinished) {
       sceneFinished = true;
       setTimeout(() => {
-        window.SCENE_DONE(2); // 👈 scene number change yahin se
+        window.parent.postMessage(
+          { type: "SCENE_DONE" },
+          "*"
+        );
       }, 5000); // 5 sec after diary close
     }
 
@@ -65,7 +68,6 @@ function prevPage() {
 
 /* ---------- TAP (NEXT) ---------- */
 document.addEventListener('click', () => {
-  // sound unlock on first tap
   if (!soundUnlocked) {
     soundUnlocked = true;
     sound.play().then(() => sound.pause());
@@ -83,16 +85,14 @@ document.addEventListener('touchstart', e => {
 document.addEventListener('touchend', e => {
   const endX = e.changedTouches[0].clientX;
 
-  // sound unlock on first swipe
   if (!soundUnlocked) {
     soundUnlocked = true;
     sound.play().then(() => sound.pause());
   }
 
   if (startX - endX > 60) {
-    nextPage();      // swipe left → next
-  } 
-  else if (endX - startX > 60) {
-    prevPage();      // swipe right → previous
+    nextPage();
+  } else if (endX - startX > 60) {
+    prevPage();
   }
 });
