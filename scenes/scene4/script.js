@@ -106,9 +106,10 @@ function finishScene() {
   if (sceneFinished) return;
   sceneFinished = true;
 
-  if (window.SCENE_DONE) {
-    setTimeout(() => {
-      window.SCENE_DONE(6); // 👈 last scene number
-    }, 5000);
-  }
+  setTimeout(() => {
+    window.parent.postMessage(
+      { type: "SCENE_DONE" },
+      "*"
+    );
+  }, 5000);
 }
