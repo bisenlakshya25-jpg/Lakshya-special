@@ -70,11 +70,12 @@ function finishScene() {
   if (sceneFinished) return;
   sceneFinished = true;
 
-  if (window.SCENE_DONE) {
-    setTimeout(() => {
-      window.SCENE_DONE(6); // 👈 Scene 6 (final)
-    }, 5000); // emotional pause
-  }
+  setTimeout(() => {
+    window.parent.postMessage(
+      { type: "SCENE_DONE" },
+      "*"
+    );
+  }, 5000); // emotional pause 💔❤️
 }
 
 /* Start typing */
