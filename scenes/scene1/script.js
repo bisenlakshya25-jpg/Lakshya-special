@@ -24,28 +24,33 @@ window.onload = () => {
   setTimeout(() => {
     content.style.opacity = "1";
     content.style.transform = "scale(1)";
+
+    /* ✅ Now scene can end safely after this */
+    enableSceneEnd();
   }, 10500);
 
-  /* 🌟 END SCENE HANDLER */
-  const endScene = () => {
-    content.style.opacity = "0";
-    content.style.transform = "scale(0.85)";
-    layer.innerHTML = "";
-    document.body.style.background = "#fff";
+  /* 🌟 SCENE END HANDLER - ONLY ENABLED AFTER ANIMATION */
+  const enableSceneEnd = () => {
+    const endScene = () => {
+      content.style.opacity = "0";
+      content.style.transform = "scale(0.85)";
+      layer.innerHTML = "";
+      document.body.style.background = "#fff";
 
-    window.removeEventListener("click", endScene);
-    window.removeEventListener("touchstart", endScene);
+      window.removeEventListener("click", endScene);
+      window.removeEventListener("touchstart", endScene);
 
-    /* 🔔 SIGNAL TO PARENT (transition.js) */
-    setTimeout(() => {
-      window.parent.postMessage(
-        { type: "SCENE_DONE" },
-        "*"
-      );
-    }, 500);
+      /* 🔔 SIGNAL TO PARENT ONLY AFTER COMPLETE SCENE */
+      setTimeout(() => {
+        window.parent.postMessage(
+          { type: "SCENE_DONE" },
+          "*"
+        );
+      }, 500);
+    };
+
+    /* ✅ LISTENERS ACTIVATED ONLY AFTER FULL ANIMATION */
+    window.addEventListener("click", endScene);
+    window.addEventListener("touchstart", endScene);
   };
-
-  /* ✅ LISTENERS MUST BE OUTSIDE endScene */
-  window.addEventListener("click", endScene);
-  window.addEventListener("touchstart", endScene);
 };
