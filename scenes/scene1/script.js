@@ -37,12 +37,12 @@ window.onload = () => {
     window.removeEventListener("touchstart", endScene);
 
     /* 🔔 SIGNAL: Scene 1 DONE */
-    if (window.SCENE_DONE) {
-      setTimeout(() => {
-        window.SCENE_DONE(1);
-      }, 5000); // 5 sec after completion
-    }
-  };
+    setTimeout(() => {
+  window.parent.postMessage(
+    { type: "SCENE_DONE" },
+    "*"
+  );
+}, 500);
 
   window.addEventListener("click", endScene);
   window.addEventListener("touchstart", endScene);
