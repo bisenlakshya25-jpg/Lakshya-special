@@ -1,0 +1,102 @@
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Patrick+Hand&display=swap');
+
+body {
+  margin: 0;
+  background: radial-gradient(#1b1b1b, #000);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.diary-wrapper {
+  width: 90vw;
+  max-width: 360px;
+  height: 90vh;
+  perspective: 1400px;
+  position: relative;
+}
+
+.diary-page {
+  position: absolute;
+  inset: 0;
+  display: none;
+}
+
+.diary-page.active {
+  display: block;
+}
+
+.page {
+  height: 100%;
+  background: linear-gradient(135deg, #fffaf0, #fff3e0);
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow:
+    0 0 25px rgba(255,215,150,0.4),
+    inset 0 0 15px rgba(255,215,150,0.6);
+  position: relative;
+  transform-origin: left;
+}
+
+/* Hearts on margin */
+.page::before,
+.page::after {
+  content: "❤";
+  position: absolute;
+  color: rgba(200,0,50,0.35);
+  font-size: 18px;
+}
+.page::before { left: 8px; top: 50%; }
+.page::after { right: 8px; top: 65%; }
+
+.date {
+  text-align: center;
+  font-family: 'Great Vibes', cursive;
+  font-size: 2.2rem;
+  color: #c9a24d;
+  text-shadow: 0 0 10px rgba(255,215,120,0.8);
+  margin-bottom: 10px;
+}
+
+.content {
+  height: calc(100% - 80px);
+  overflow-y: auto;
+  text-align: center;
+  font-family: 'Patrick Hand', cursive;
+  font-size: 1.2rem;
+  color: #3b2a1a;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 14px;
+}
+
+.content img {
+  width: 100%;
+  border-radius: 14px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.35);
+}
+
+.two-photos img {
+  width: 100%;
+}
+
+.text-photo img {
+  margin-top: 10px;
+}
+.diary-wrapper.close {
+  animation: closeDiary 1.2s ease forwards;
+}
+
+@keyframes closeDiary {
+  0% {
+    transform: rotateX(0deg) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: rotateX(20deg) scale(0.85);
+    opacity: 0;
+  }
+}
