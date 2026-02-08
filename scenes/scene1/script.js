@@ -36,14 +36,16 @@ window.onload = () => {
     window.removeEventListener("click", endScene);
     window.removeEventListener("touchstart", endScene);
 
-    /* 🔔 SIGNAL: Scene 1 DONE */
+    /* 🔔 SIGNAL TO PARENT (transition.js) */
     setTimeout(() => {
-  window.parent.postMessage(
-    { type: "SCENE_DONE" },
-    "*"
-  );
-}, 500);
+      window.parent.postMessage(
+        { type: "SCENE_DONE" },
+        "*"
+      );
+    }, 500);
+  };
 
+  /* ✅ LISTENERS MUST BE OUTSIDE endScene */
   window.addEventListener("click", endScene);
   window.addEventListener("touchstart", endScene);
 };
