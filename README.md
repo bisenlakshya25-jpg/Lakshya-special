@@ -1,2 +1,0 @@
-# Lakshya-special
-Birthday 
