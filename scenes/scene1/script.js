@@ -5,6 +5,10 @@ window.onload = () => {
   const colors = ["#590d22","#7b002c","#a4133c","#c9184a","#ff4d6d"];
   const COUNT = 34;
 
+  let sceneReady = false;   // 🔒 text aane ke baad hi true
+  let sceneFinished = false; // 🔒 double trigger lock
+
+  /* 🎈 Balloons */
   for (let i = 0; i < COUNT; i++) {
     const b = document.createElement("div");
     b.className = "balloon";
@@ -20,37 +24,34 @@ window.onload = () => {
     layer.appendChild(b);
   }
 
-  /* 🌙 Reveal Text after 10.5s */
+  /* 🌙 Reveal text after balloons */
   setTimeout(() => {
     content.style.opacity = "1";
     content.style.transform = "scale(1)";
-
-    /* ✅ Now scene can end safely after this */
-    enableSceneEnd();
+    sceneReady = true; // ✅ ab interaction allowed
   }, 10500);
 
-  /* 🌟 SCENE END HANDLER - ONLY ENABLED AFTER ANIMATION */
-  const enableSceneEnd = () => {
-    const endScene = () => {
-      content.style.opacity = "0";
-      content.style.transform = "scale(0.85)";
-      layer.innerHTML = "";
-      document.body.style.background = "#fff";
+  /* 🌟 END SCENE */
+  const endScene = () => {
+    if (!sceneReady || sceneFinished) return;
+    sceneFinished = true;
 
-      window.removeEventListener("click", endScene);
-      window.removeEventListener("touchstart", endScene);
+    content.style.opacity = "0";
+    content.style.transform = "scale(0.85)";
+    layer.innerHTML = "";
 
-      /* 🔔 SIGNAL TO PARENT ONLY AFTER COMPLETE SCENE */
-      setTimeout(() => {
-        window.parent.postMessage(
-          { type: "SCENE_DONE" },
-          "*"
-        );
-      }, 500);
-    };
+    window.removeEventListener("click", endScene);
+    window.removeEventListener("touchstart", endScene);
 
-    /* ✅ LISTENERS ACTIVATED ONLY AFTER FULL ANIMATION */
-    window.addEventListener("click", endScene);
-    window.addEventListener("touchstart", endScene);
+    /* 🔔 Notify parent AFTER fade */
+    setTimeout(() => {
+      window.parent.postMessage(
+        { type: "SCENE_DONE" },
+        "*"
+      );
+    }, 1200);
   };
+
+  window.addEventListener("click", endScene);
+  window.addEventListener("touchstart", endScene);
 };
