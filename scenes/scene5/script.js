@@ -9,9 +9,10 @@ const wishText = document.getElementById('wishText');
 let cutting = false;
 let cutDone = false;
 let musicStarted = false;
-let sceneFinished = false; // 🆕 safety lock
+let sceneFinished = false; // 🔒 HARD LOCK
 
-/* ---------- Start music on first touch ---------- */
+/* ---------- MUSIC (SAFE START) ---------- */
+
 document.body.addEventListener('touchstart', () => {
   if (!musicStarted) {
     music.volume = 0.9;
@@ -20,8 +21,12 @@ document.body.addEventListener('touchstart', () => {
   }
 }, { once: true });
 
+/* ---------- CUT START ---------- */
+
 document.addEventListener('touchstart', e => {
-  if (cutDone) return;
+  if (sceneFinished || cutDone) return;
+
+  cutting = true;
 
   const x = e.touches[0].clientX;
   const y = e.touches[0].clientY;
@@ -31,24 +36,34 @@ document.addEventListener('touchstart', e => {
   knife.style.opacity = 1;
 
   instruction.style.opacity = 0;
-  cutting = true;
 });
 
+/* ---------- CUT MOVE ---------- */
+
 document.addEventListener('touchmove', e => {
-  if (!cutting || cutDone) return;
+  if (!cutting || cutDone || sceneFinished) return;
 
   knife.style.left = e.touches[0].clientX + 'px';
   knife.style.top = e.touches[0].clientY + 'px';
 });
 
+/* ---------- CUT END ---------- */
+
 document.addEventListener('touchend', () => {
-  if (!cutting || cutDone) return;
+  if (!cutting || cutDone || sceneFinished) return;
 
   cutting = false;
   cutDone = true;
   knife.style.opacity = 0;
 
-  /* ---------- Cake cut ---------- */
+  runCakeCut();
+});
+
+/* ---------- CAKE CUT SEQUENCE ---------- */
+
+function runCakeCut() {
+
+  /* Cake animation */
   setTimeout(() => {
     cake.style.transform = 'translateZ(20px) rotateY(-4deg)';
     slice.style.opacity = 1;
@@ -56,7 +71,7 @@ document.addEventListener('touchend', () => {
       'translateX(60px) translateZ(60px) rotateY(18deg)';
   }, 600);
 
-  /* ---------- Music fade out ---------- */
+  /* Music fade */
   setTimeout(() => {
     let fade = setInterval(() => {
       if (music.volume > 0.05) {
@@ -69,23 +84,19 @@ document.addEventListener('touchend', () => {
     }, 150);
   }, 1200);
 
-  /* ---------- Blackout + wish text ---------- */
+  /* Blackout + Wish */
   setTimeout(() => {
     blackout.style.opacity = 1;
     wishText.style.opacity = 1;
-    finishScene(); // 🆕 scene done hook
   }, 2600);
-});
 
-/* ---------- SCENE DONE ---------- */
-function finishScene() {
-  if (sceneFinished) return;
-  sceneFinished = true;
-
+  /* Scene end */
   setTimeout(() => {
+    sceneFinished = true;
+
     window.parent.postMessage(
       { type: "SCENE_DONE" },
       "*"
     );
-  }, 3000);
+  }, 4600);
 }
