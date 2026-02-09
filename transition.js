@@ -1,26 +1,46 @@
 const scenes = [
-  "scene1",
-  "scene2",
-  "scene3",
-  "scene4",
-  "scene5",
-  "scene6"
+  "scene1.html",
+  "scene2.html",
+  "scene3.html",
+  "scene4.html",
+  "scene5.html",
+  "scene6.html"
 ];
 
-let current = 0;
-const frame = document.getElementById("sceneFrame");
-const fade = document.getElementById("fade");
+let currentSceneIndex = 0;
+let loading = false;
 
-window.addEventListener("message", e => {
+const container = document.getElementById("scene-container");
+
+/* ---------- LOAD SCENE ---------- */
+
+function loadScene(index) {
+  if (loading || index >= scenes.length) return;
+  loading = true;
+
+  container.innerHTML = "";
+
+  const iframe = document.createElement("iframe");
+  iframe.src = scenes[index];
+  iframe.className = "scene-frame";
+  iframe.allow = "autoplay; fullscreen";
+  iframe.onload = () => loading = false;
+
+  container.appendChild(iframe);
+}
+
+/* ---------- LISTEN FOR SCENE DONE ---------- */
+
+window.addEventListener("message", (e) => {
   if (!e.data || e.data.type !== "SCENE_DONE") return;
 
-  if (current >= scenes.length - 1) return;
+  currentSceneIndex++;
 
-  fade.style.opacity = 1;
-
-  setTimeout(() => {
-    current++;
-    frame.src = `scenes/${scenes[current]}/index.html`;
-    fade.style.opacity = 0;
-  }, 1200);
+  if (currentSceneIndex < scenes.length) {
+    setTimeout(() => loadScene(currentSceneIndex), 1200);
+  }
 });
+
+/* ---------- START ---------- */
+
+loadScene(currentSceneIndex);
